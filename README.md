@@ -8,7 +8,7 @@ mcp-mux acts as a router between MCP clients and servers, providing a simplified
 
 ## Requirements
 
-- Python 3.13+
+- Python 3.10+
 - MCP-compatible client (e.g., Claude Desktop)
 
 ## Installation
