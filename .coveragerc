@@ -1,0 +1,19 @@
+[run]
+source = src/mux
+omit =
+    */tests/*
+    */__init__.py
+    */conftest.py
+    */.venv/*
+    */.direnv/*
+
+[report]
+precision = 2
+show_missing = True
+skip_covered = False
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml
