@@ -5,6 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
+src/mux/_version.py
 
 # Virtual environments
 .venv

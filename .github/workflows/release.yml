@@ -1,0 +1,115 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Need full history for setuptools-scm
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+    
+    - name: Set up Python
+      run: uv python install 3.13
+    
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install dependencies
+      run: uv sync --all-extras --dev
+    
+    - name: Run tests
+      run: |
+        uv run pytest tests/ -v
+        uv run ruff check .
+        uv run pyright
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Need full history for setuptools-scm
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+    
+    - name: Set up Python
+      run: uv python install 3.13
+    
+    - name: Build package
+      run: |
+        uv build
+        # Display version for verification
+        echo "Built version: $(ls dist/mcp_mux-*.whl | sed 's/.*mcp_mux-\(.*\)-py3.*/\1/')"
+    
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+  publish-to-pypi:
+    name: Publish Python distribution to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mcp-mux
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Create GitHub Release
+    needs: publish-to-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Need history for release notes
+    
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/*
+        generate_release_notes: true
+        body: |
+          ## Installation
+          
+          ```bash
+          pip install mcp-mux
+          # or
+          uvx mcp-mux
+          ```
+          
+          See the [changelog](https://github.com/logandonley/mcp-mux/compare/${{ github.event.before }}...${{ github.ref }}) for details.
