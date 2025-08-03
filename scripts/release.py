@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Release script for mcp-mux."""
+# ruff: noqa: T201
 
 import argparse
 import subprocess
@@ -113,14 +114,14 @@ def main():
         print(f"Would create tag: {tag}")
 
     print("\n✓ Release process complete!")
-    print(f"\nGitHub Actions will now:")
+    print("\nGitHub Actions will now:")
     print("  1. Run tests on all platforms")
     print("  2. Build the package")
     print("  3. Publish to PyPI (if trusted publishing is configured)")
     print("  4. Create a GitHub release")
 
     if not args.dry_run:
-        print(f"\nMonitor progress at: https://github.com/logandonley/mcp-mux/actions")
+        print("\nMonitor progress at: https://github.com/logandonley/mcp-mux/actions")
 
 
 if __name__ == "__main__":
