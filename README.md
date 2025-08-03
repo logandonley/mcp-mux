@@ -1,10 +1,21 @@
 # mcp-mux
 
-A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) multiplexer that simplifies tool access through semantic search.
+[![CI](https://github.com/logandonley/mcp-mux/workflows/CI/badge.svg)](https://github.com/logandonley/mcp-mux/actions)
+[![Python Version](https://img.shields.io/pypi/pyversions/mcp-mux)](https://pypi.org/project/mcp-mux/)
+[![PyPI](https://img.shields.io/pypi/v/mcp-mux)](https://pypi.org/project/mcp-mux/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Overview
+A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) multiplexer that intelligently routes to the right tool from hundreds of available options using semantic search.
 
-mcp-mux acts as a router between MCP clients and servers, providing a simplified interface that exposes only two tools (`search` and `execute`) instead of potentially hundreds. It uses semantic search to dynamically find and execute the right tools based on natural language queries.
+## Why mcp-mux?
+
+**Problem**: Managing multiple MCP servers means dealing with hundreds of tools, making it hard for LLMs to find the right one.
+
+**Solution**: mcp-mux acts as an intelligent router that exposes just two tools:
+- `search` - Find tools using natural language
+- `execute` - Run the tool you found
+
+This dramatically simplifies tool discovery and improves LLM performance with MCP servers.
 
 ## Requirements
 
